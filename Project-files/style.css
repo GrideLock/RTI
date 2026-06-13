@@ -1,0 +1,108 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    text-decoration: none;
+}
+:root{
+    /* Main Brand Colors */
+    --primary-color: #1d5e1e;
+    --primary-light: #2f7d32;
+    --primary-dark: #144715;
+
+    /* Accent Colors */
+    --accent-color: #d4a017;
+    --accent-light: #f4c542;
+
+    /* Background Colors */
+    --background-color: #f5f7f2;
+    --surface-color: #ffffff;
+    --section-bg: #e8efe6;
+
+    /* Text Colors */
+    --text-color: #1f2937;
+    --text-light: #6b7280;
+    --heading-color: #111827;
+
+    /* Borders & Shadows */
+    --border-color: #d1d5db;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+
+    /* Button Colors */
+    --button-color: #1d5e1e;
+    --button-hover: #144715;
+    --button-text: #ffffff;
+
+    /* Status Colors */
+    --success-color: #22c55e;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+}
+body{
+    background: var(--background-color);
+}
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 5%;
+    width: 100%;
+    background: var(--text-color);
+    z-index: 10px;
+    transition: all 0.5s ease-in;
+}
+.navbar ul{
+    display: inline-flex;
+    list-style: none;
+    
+}
+.navbar ul li{
+    padding: 20px 15px;
+    font-size: 25px;
+    font-weight: 600;
+    
+}
+.navbar ul li a{
+    color: var(--surface-color);
+    transition: all 0.5s ease-in;
+    position: relative;
+}
+.navbar ul li a:hover{
+    color: var(--accent-light);
+}
+.navbar ul li a::before{
+    position: absolute;
+    left: 0;
+    content: "";
+    bottom: -10px;
+    width: 0;
+    height: 4px;
+    background: var(--accent-light);
+}
+.navbar ul li a:hover::before{
+    width: 100%;
+}
+.navbar ul li a.active{
+    color: var(--accent-light);
+}
+.logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.logo h2{
+    font-size: 45px;
+    color: var(--primary-color);
+}
+.logo span{
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--surface-color);
+}
+
+.logo img{
+    width: 100px;
+    object-fit: cover;
+    aspect-ratio: 5/5;
+}
