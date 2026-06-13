@@ -13,15 +13,23 @@
             <h2>RTI</h2>
             <span>Rise Together Initiative</span>
         </div>
-        <nav class="navbar">
-            <ul>
-                <li><a href="#home" class="active">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#Involved">Get Involved</a></li>
-                <li><a href="#gallery">Gallery</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
+        <div class="nav-controls">
+            <nav class="navbar" id="navbar">
+                <ul>
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#Involved">Get Involved</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                <i class='bx bx-moon'></i>
+            </button>
+            <button type="button" class="menu-icon" id="menu-icon" aria-label="Toggle menu" aria-expanded="false">
+                <i class='bx bx-menu'></i>
+            </button>
+        </div>
     </header>
     <section class="home" id="home">
         <div class="home-content">
@@ -32,5 +40,6 @@
             </div>
         </div>
     </section>
+    <script src="script.js"></script>
 </body>
 </html>
