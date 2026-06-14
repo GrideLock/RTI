@@ -29,6 +29,7 @@ navLinks.forEach(link => {
 
 /* Scroll reveal animation for about cards */
 const aboutCards = document.querySelectorAll('.about-card');
+const coreValueCards = document.querySelectorAll('.core-value-card');
 const observerOptions = {
     root: null,
     rootMargin: '0px',
@@ -43,6 +44,7 @@ const aboutObserver = new IntersectionObserver((entries, observer) => {
     });
 }, observerOptions);
 aboutCards.forEach(card => aboutObserver.observe(card));
+coreValueCards.forEach(card => aboutObserver.observe(card));
 
 /* Dark mode toggle */
 const themeToggle = document.getElementById('theme-toggle');
@@ -69,3 +71,48 @@ themeToggle.addEventListener('click', () => {
         localStorage.setItem('theme', 'light');
     }
 });
+
+/* Typewriter animation for about-moto */
+(function initTypewriter() {
+    const typingText = document.querySelector('.typing-text');
+    if (!typingText) return;
+
+    const fullText = "\u201CIf I let them down now, they will lose hope forever.\u201D";
+
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        typingText.textContent = fullText;
+        return;
+    }
+
+    let charIndex = 0;
+    let isDeleting = false;
+    let typeSpeed = 100;
+
+    function typeWriter() {
+        if (!typingText) return;
+
+        if (!isDeleting) {
+            typingText.textContent = fullText.substring(0, charIndex + 1);
+            charIndex++;
+            if (charIndex === fullText.length) {
+                isDeleting = true;
+                typeSpeed = 2500; // pause before deleting
+            } else {
+                typeSpeed = 100;
+            }
+        } else {
+            typingText.textContent = fullText.substring(0, charIndex - 1);
+            charIndex--;
+            if (charIndex === 0) {
+                isDeleting = false;
+                typeSpeed = 1000; // pause before retyping
+            } else {
+                typeSpeed = 50;
+            }
+        }
+
+        setTimeout(typeWriter, typeSpeed);
+    }
+
+    setTimeout(typeWriter, 1000);
+})();
