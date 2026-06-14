@@ -27,6 +27,23 @@ navLinks.forEach(link => {
     });
 });
 
+/* Scroll reveal animation for about cards */
+const aboutCards = document.querySelectorAll('.about-card');
+const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.15
+};
+const aboutObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+aboutCards.forEach(card => aboutObserver.observe(card));
+
 /* Dark mode toggle */
 const themeToggle = document.getElementById('theme-toggle');
 const themeIcon = themeToggle.querySelector('i');

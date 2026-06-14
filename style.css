@@ -225,22 +225,23 @@ body.dark-mode .home::before{
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: rgba(212, 160, 23, 0.15);
-    border: 1px solid var(--accent-color);
+    background: var(--primary-light);
+    border: 1px solid var(--primary-light);
     padding: 8px 20px;
     border-radius: 50px;
     font-size: 16px;
     font-weight: 600;
-    color: var(--accent-color);
+    color: var(--button-text);
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 body.dark-mode .home-badge{
-    background: rgba(212, 160, 23, 0.2);
+    background: var(--primary-light);
 }
 .home-badge .blinking-span{
     font-size: 20px;
     animation: blink 1.5s ease-in-out infinite;
+    color: var(--danger-color);
 }
 @keyframes blink {
     0%, 100%{
@@ -264,7 +265,7 @@ body.dark-mode .home-badge{
     letter-spacing: -1px;
 }
 .home-header .accent-word{
-    color: var(--accent-color);
+    color: var(--primary-light);
     position: relative;
 }
 .home-header .accent-word::after{
@@ -273,8 +274,8 @@ body.dark-mode .home-badge{
     left: 0;
     bottom: 4px;
     width: 100%;
-    height: 12px;
-    background: rgba(212, 160, 23, 0.25);
+    height: 5px;
+    background: var(--primary-light);
     border-radius: 4px;
     z-index: -1;
 }
@@ -335,8 +336,8 @@ body.dark-mode .btn-outline:hover{
 .home-shape{
     position: absolute;
     border-radius: 50%;
-    background: var(--accent-color);
-    opacity: 0.08;
+    background: var(--primary-light);
+    opacity: 0.4;
     z-index: 0;
     pointer-events: none;
 }
@@ -493,9 +494,224 @@ body.dark-mode .btn-outline:hover{
     }
 }
 
+/* About Section */
+.about{
+    padding: 80px 5%;
+    background: var(--section-bg);
+}
+.about-container{
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.about-header{
+    text-align: center;
+    margin-bottom: 50px;
+}
+.about-subtitle{
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-color);
+    margin-bottom: 12px;
+}
+.about-title{
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--heading-color);
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+}
+.about-intro{
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--text-light);
+    max-width: 700px;
+    margin: 0 auto;
+}
+.about-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}
+.about-card{
+    background: var(--primary-light);
+    padding: 32px;
+    border-radius: 16px;
+    color: var(--button-text);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.6s ease-out;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(40px);
+    will-change: transform, opacity;
+}
+.about-card.visible{
+    opacity: 1;
+    transform: translateY(0);
+}
+.about-card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+.about-card.visible:hover{
+    transform: translateY(-6px);
+}
+
+/* Staggered reveal delays */
+.about-card.visible:nth-child(1){ transition-delay: 0.1s; }
+.about-card.visible:nth-child(2){ transition-delay: 0.2s; }
+.about-card.visible:nth-child(3){ transition-delay: 0.3s; }
+.about-card.visible:nth-child(4){ transition-delay: 0.4s; }
+.about-card.visible:nth-child(5){ transition-delay: 0.5s; }
+.about-card.visible:nth-child(6){ transition-delay: 0.6s; }
+.about-card.visible:nth-child(7){ transition-delay: 0.7s; }
+
+/* Subtle floating animation (uses margin-top to avoid conflicting with transform hover) */
+.about-card.visible{
+    animation: cardFloat 6s ease-in-out infinite;
+}
+.about-card.visible:nth-child(1){ animation-delay: 0s; }
+.about-card.visible:nth-child(2){ animation-delay: 1s; }
+.about-card.visible:nth-child(3){ animation-delay: 2s; }
+.about-card.visible:nth-child(4){ animation-delay: 3s; }
+.about-card.visible:nth-child(5){ animation-delay: 4s; }
+.about-card.visible:nth-child(6){ animation-delay: 5s; }
+.about-card.visible:nth-child(7){ animation-delay: 6s; }
+
+@keyframes cardFloat {
+    0%, 100%{
+        margin-top: 0;
+    }
+    50%{
+        margin-top: -8px;
+    }
+}
+.about-icon{
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.about-icon i{
+    font-size: 24px;
+    color: var(--accent-light);
+}
+.about-card h3{
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+.about-card p{
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--button-text);
+    opacity: 0.9;
+}
+
+/* Dark mode about */
+body.dark-mode .about{
+    background: var(--background-color);
+}
+body.dark-mode .about-card{
+    background: var(--primary-light);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+body.dark-mode .about-card:hover{
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Tablet responsive */
+@media screen and (max-width: 992px){
+    .about{
+        padding: 60px 4%;
+    }
+    .about-title{
+        font-size: 36px;
+    }
+    .about-grid{
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    .about-card{
+        padding: 28px;
+    }
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px){
+    .about{
+        padding: 50px 4%;
+    }
+    .about-title{
+        font-size: 32px;
+    }
+    .about-intro{
+        font-size: 16px;
+    }
+    .about-grid{
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+    .about-card{
+        padding: 24px;
+    }
+    .about-card h3{
+        font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 480px){
+    .about{
+        padding: 40px 4%;
+    }
+    .about-title{
+        font-size: 28px;
+    }
+    .about-subtitle{
+        font-size: 12px;
+    }
+    .about-card{
+        padding: 20px;
+        border-radius: 12px;
+    }
+    .about-icon{
+        width: 44px;
+        height: 44px;
+    }
+    .about-icon i{
+        font-size: 20px;
+    }
+    .about-card h3{
+        font-size: 18px;
+    }
+    .about-card p{
+        font-size: 14px;
+    }
+}
+
 @media (prefers-reduced-motion: reduce){
     .navbar{
         transition: none;
+    }
+    .about-card{
+        transition: none;
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+    .about-card.visible{
+        animation: none;
+        transform: none;
+    }
+    .about-card:hover{
+        transform: none;
     }
 }
 
