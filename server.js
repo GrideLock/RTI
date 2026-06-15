@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
 const nodemailer = require('nodemailer');
 
 const app = express();
@@ -136,39 +137,64 @@ app.post('/api/create-flutterwave-payment', async (req, res) => {
             return res.status(400).json({ error: 'Amount must be between $1.00 and $10,000.00' });
         }
 
-        const response = await fetch('https://api.flutterwave.com/v3/payments', {
+        const payload = JSON.stringify({
+            tx_ref: `RTI-${Date.now()}`,
+            amount: amountNum,
+            currency: 'USD',
+            redirect_url: `${BASE_URL}/?payment=success`,
+            meta: { consumer_id: Date.now(), consumer_mac: '92a3-912ba-1192a' },
+            customer: {
+                email: email || 'donor@example.com',
+                phonenumber: phone || '',
+                name: name || 'Anonymous Donor'
+            },
+            customizations: {
+                title: 'Donation to Rise Together Initiative',
+                description: 'Supporting refugee and host communities in Uganda',
+                logo: `${BASE_URL}/RTI-logo2.png`
+            },
+            payment_options: 'card,mobilemoneyuganda'
+        });
+
+        const options = {
+            hostname: 'api.flutterwave.com',
+            path: '/v3/payments',
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${FLW_SECRET_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                tx_ref: `RTI-${Date.now()}`,
-                amount: amountNum,
-                currency: 'USD',
-                redirect_url: `${BASE_URL}/?payment=success`,
-                meta: { consumer_id: Date.now(), consumer_mac: '92a3-912ba-1192a' },
-                customer: {
-                    email: email || 'donor@example.com',
-                    phonenumber: phone || '',
-                    name: name || 'Anonymous Donor'
-                },
-                customizations: {
-                    title: 'Donation to Rise Together Initiative',
-                    description: 'Supporting refugee and host communities in Uganda',
-                    logo: `${BASE_URL}/RTI-logo2.png`
-                },
-                payment_options: 'card,mobilemoneyuganda'
-            })
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(payload)
+            }
+        };
+
+        const flutterwaveReq = https.request(options, (flutterwaveRes) => {
+            let data = '';
+            flutterwaveRes.on('data', (chunk) => {
+                data += chunk;
+            });
+            flutterwaveRes.on('end', () => {
+                try {
+                    const parsedData = JSON.parse(data);
+                    if (parsedData.status === 'success' && parsedData.data && parsedData.data.link) {
+                        res.json({ url: parsedData.data.link });
+                    } else {
+                        console.error('Flutterwave error:', parsedData);
+                        res.status(500).json({ error: 'Payment link creation failed. Please try again.' });
+                    }
+                } catch (err) {
+                    console.error('Flutterwave JSON parse error:', err.message);
+                    res.status(500).json({ error: 'Payment service response invalid. Please try again.' });
+                }
+            });
         });
 
-        const data = await response.json();
-        if (data.status === 'success' && data.data?.link) {
-            res.json({ url: data.data.link });
-        } else {
-            console.error('Flutterwave error:', data);
-            res.status(500).json({ error: 'Payment link creation failed. Please try again.' });
-        }
+        flutterwaveReq.on('error', (err) => {
+            console.error('Flutterwave request error:', err.message);
+            res.status(500).json({ error: 'Payment service unavailable. Please try again.' });
+        });
+
+        flutterwaveReq.write(payload);
+        flutterwaveReq.end();
     } catch (err) {
         console.error('Flutterwave error:', err.message);
         res.status(500).json({ error: 'Payment service unavailable. Please try again.' });
