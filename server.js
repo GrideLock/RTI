@@ -1,8 +1,8 @@
+require('dotenv/config');
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-const https = require('https');
 const nodemailer = require('nodemailer');
 
 const app = express();
@@ -10,9 +10,9 @@ const PORT = process.env.PORT || 3000;
 
 // Payment provider configuration
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
-const FLW_PUBLIC_KEY = process.env.FLW_PUBLIC_KEY;
 const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
+
+console.log('DEBUG: STRIPE_SECRET_KEY is:', STRIPE_SECRET_KEY ? 'SET' : 'NOT SET');
 
 // Email configuration
 const SMTP_HOST = process.env.SMTP_HOST;
@@ -119,88 +119,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
     }
 });
 
-// Create Flutterwave Payment Link (for MTN/Airtel Mobile Money)
-app.post('/api/create-flutterwave-payment', async (req, res) => {
-    if (!checkRateLimit(req.ip + ':flutterwave', 60000, 5)) {
-        return res.status(429).json({ error: 'Too many requests. Please try again later.' });
-    }
-
-    if (!FLW_SECRET_KEY) {
-        return res.status(503).json({ error: 'Flutterwave is not configured. Please set FLW_SECRET_KEY.' });
-    }
-
-    try {
-        const { amount, name, email, phone } = req.body;
-        const amountNum = parseFloat(amount);
-
-        if (!amountNum || isNaN(amountNum) || amountNum < 1 || amountNum > 10000) {
-            return res.status(400).json({ error: 'Amount must be between $1.00 and $10,000.00' });
-        }
-
-        const payload = JSON.stringify({
-            tx_ref: `RTI-${Date.now()}`,
-            amount: amountNum,
-            currency: 'USD',
-            redirect_url: `${BASE_URL}/?payment=success`,
-            meta: { consumer_id: Date.now(), consumer_mac: '92a3-912ba-1192a' },
-            customer: {
-                email: email || 'donor@example.com',
-                phonenumber: phone || '',
-                name: name || 'Anonymous Donor'
-            },
-            customizations: {
-                title: 'Donation to Rise Together Initiative',
-                description: 'Supporting refugee and host communities in Uganda',
-                logo: `${BASE_URL}/RTI-logo2.png`
-            },
-            payment_options: 'card,mobilemoneyuganda'
-        });
-
-        const options = {
-            hostname: 'api.flutterwave.com',
-            path: '/v3/payments',
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${FLW_SECRET_KEY}`,
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(payload)
-            }
-        };
-
-        const flutterwaveReq = https.request(options, (flutterwaveRes) => {
-            let data = '';
-            flutterwaveRes.on('data', (chunk) => {
-                data += chunk;
-            });
-            flutterwaveRes.on('end', () => {
-                try {
-                    const parsedData = JSON.parse(data);
-                    if (parsedData.status === 'success' && parsedData.data && parsedData.data.link) {
-                        res.json({ url: parsedData.data.link });
-                    } else {
-                        console.error('Flutterwave error:', parsedData);
-                        res.status(500).json({ error: 'Payment link creation failed. Please try again.' });
-                    }
-                } catch (err) {
-                    console.error('Flutterwave JSON parse error:', err.message);
-                    res.status(500).json({ error: 'Payment service response invalid. Please try again.' });
-                }
-            });
-        });
-
-        flutterwaveReq.on('error', (err) => {
-            console.error('Flutterwave request error:', err.message);
-            res.status(500).json({ error: 'Payment service unavailable. Please try again.' });
-        });
-
-        flutterwaveReq.write(payload);
-        flutterwaveReq.end();
-    } catch (err) {
-        console.error('Flutterwave error:', err.message);
-        res.status(500).json({ error: 'Payment service unavailable. Please try again.' });
-    }
-});
-
 // Save contact form submission
 app.post('/api/contact', async (req, res) => {
     if (!checkRateLimit(req.ip + ':contact', 60000, 5)) {
@@ -247,7 +165,7 @@ app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
     console.log('Payment providers:');
     console.log(`  - Stripe: ${STRIPE_SECRET_KEY ? 'configured' : 'NOT CONFIGURED'}`);
-    console.log(`  - Flutterwave: ${FLW_SECRET_KEY ? 'configured' : 'NOT CONFIGURED'}`);
+    console.log(`  - WhatsApp: available as payment option`);
     console.log(`  - Email: ${emailTransporter ? 'configured' : 'NOT CONFIGURED'}`);
     console.log('Press Ctrl+C to stop');
 });

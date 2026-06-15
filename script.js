@@ -128,7 +128,7 @@ const donateForm = document.getElementById('donateForm');
 const contactForm = document.getElementById('contactForm');
 const contactStatus = document.getElementById('contactStatus');
 
-function openDonateModal() {
+function _openDonateModal() {
     if (donateModal) {
         donateModal.classList.add('active');
         donateModal.removeAttribute('inert');
@@ -142,6 +142,20 @@ function closeDonateModal() {
         donateModal.setAttribute('inert', '');
         document.body.style.overflow = '';
     }
+}
+
+function openDonateModal() {
+    _openDonateModal();
+    if (donateForm) donateForm.style.display = 'flex';
+    if (whatsappGuidance) whatsappGuidance.style.display = 'none';
+    if (donateSubmitBtn) {
+        donateSubmitBtn.querySelector('.submit-text').innerHTML = 'Proceed to Payment <i class="bx bx-right-arrow-alt"></i>';
+    }
+    if (donateFormNote) {
+        donateFormNote.innerHTML = '<i class="bx bx-lock-alt"></i> Secure payment. Your information is protected.';
+    }
+    const stripeRadio = document.querySelector('input[name="paymentMethod"][value="stripe"]');
+    if (stripeRadio) stripeRadio.checked = true;
 }
 
 function openContactModal(type = 'general') {
@@ -214,6 +228,54 @@ if (amountInput) {
     });
 }
 
+/* Payment method change handler */
+const paymentMethodRadios = document.querySelectorAll('input[name="paymentMethod"]');
+const donateSubmitBtn = document.getElementById('donateSubmitBtn');
+const donateFormNote = document.getElementById('donateFormNote');
+const whatsappGuidance = document.getElementById('whatsappGuidance');
+
+function updatePaymentMethodUI() {
+    const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'stripe';
+    if (paymentMethod === 'whatsapp') {
+        donateSubmitBtn.querySelector('.submit-text').innerHTML = 'Get Payment Instructions <i class="bx bx-right-arrow-alt"></i>';
+        donateFormNote.innerHTML = '<i class="bx bx-info-circle"></i> You will receive payment details via WhatsApp.';
+    } else {
+        donateSubmitBtn.querySelector('.submit-text').innerHTML = 'Proceed to Payment <i class="bx bx-right-arrow-alt"></i>';
+        donateFormNote.innerHTML = '<i class="bx bx-lock-alt"></i> Secure payment. Your information is protected.';
+    }
+}
+
+paymentMethodRadios.forEach(radio => {
+    radio.addEventListener('change', updatePaymentMethodUI);
+});
+
+/* Copy to clipboard helper */
+function copyToClipboard(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const text = el.textContent.trim();
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = el.nextElementSibling;
+        if (btn) {
+            const originalIcon = btn.innerHTML;
+            btn.innerHTML = '<i class="bx bx-check"></i>';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.innerHTML = originalIcon;
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+    }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+    });
+}
+
 /* Donation Form Submission */
 if (donateForm) {
     donateForm.addEventListener('submit', async (e) => {
@@ -222,22 +284,27 @@ if (donateForm) {
         const submitText = submitBtn.querySelector('.submit-text');
         const submitLoader = submitBtn.querySelector('.submit-loader');
         
-        submitText.style.display = 'none';
-        submitLoader.style.display = 'inline-flex';
-        submitBtn.disabled = true;
-        
         const amount = document.getElementById('donateAmount').value;
         const email = document.getElementById('donateEmail').value;
         const name = document.getElementById('donateName').value;
         const phone = document.getElementById('donatePhone').value;
-        const paymentMethod = donateForm.querySelector('input[name="paymentMethod"]:checked')?.value || 'flutterwave';
+        const paymentMethod = donateForm.querySelector('input[name="paymentMethod"]:checked')?.value || 'stripe';
         
-        const endpoint = paymentMethod === 'stripe' 
-            ? '/api/create-checkout-session' 
-            : '/api/create-flutterwave-payment';
+        // WhatsApp payment flow
+        if (paymentMethod === 'whatsapp') {
+            donateForm.style.display = 'none';
+            if (whatsappGuidance) {
+                whatsappGuidance.style.display = 'flex';
+            }
+            return;
+        }
+        
+        submitText.style.display = 'none';
+        submitLoader.style.display = 'inline-flex';
+        submitBtn.disabled = true;
         
         try {
-            const response = await fetch(endpoint, {
+            const response = await fetch('/api/create-checkout-session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount, email, name, phone })
@@ -260,6 +327,8 @@ if (donateForm) {
         }
     });
 }
+
+
 
 /* Contact Form Submission */
 if (contactForm) {

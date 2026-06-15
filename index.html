@@ -411,27 +411,51 @@
                     <label>Payment Method</label>
                     <div class="payment-options" role="radiogroup" aria-label="Payment method">
                         <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="flutterwave" checked aria-label="Pay with MTN or Airtel Mobile Money">
-                            <span class="payment-option-box">
-                                <i class='bx bx-mobile-alt' aria-hidden="true"></i>
-                                <span>MTN/Airtel Mobile Money</span>
-                            </span>
-                        </label>
-                        <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="stripe" aria-label="Pay with Credit or Debit Card">
+                            <input type="radio" name="paymentMethod" value="stripe" checked aria-label="Pay with Credit or Debit Card">
                             <span class="payment-option-box">
                                 <i class='bx bx-credit-card' aria-hidden="true"></i>
                                 <span>Credit/Debit Card</span>
                             </span>
                         </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="whatsapp" aria-label="Pay via WhatsApp Mobile Money">
+                            <span class="payment-option-box">
+                                <i class='bx bxl-whatsapp' aria-hidden="true"></i>
+                                <span>WhatsApp (MTN/Airtel)</span>
+                            </span>
+                        </label>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary modal-submit">
+                <button type="submit" class="btn btn-primary modal-submit" id="donateSubmitBtn">
                     <span class="submit-text">Proceed to Payment <i class='bx bx-right-arrow-alt'></i></span>
                     <span class="submit-loader" style="display:none"><i class='bx bx-loader-alt bx-spin'></i> Processing...</span>
                 </button>
-                <p class="form-note"><i class='bx bx-lock-alt'></i> Secure payment. Your information is protected.</p>
+                <p class="form-note" id="donateFormNote"><i class='bx bx-lock-alt'></i> Secure payment. Your information is protected.</p>
             </form>
+            <!-- WhatsApp Payment Guidance -->
+            <div class="whatsapp-guidance" id="whatsappGuidance" style="display:none">
+                <div class="whatsapp-guidance-header">
+                    <i class='bx bxl-whatsapp'></i>
+                    <h3>Donate via WhatsApp</h3>
+                </div>
+                <p class="whatsapp-guidance-intro">Send your donation directly through WhatsApp. Our team will guide you through the mobile money transfer.</p>
+                <div class="whatsapp-guidance-step">
+                    <span class="step-number">1</span>
+                    <p>Save our number: <strong class="copy-number" id="whatsappNumber">+256 762 123 456</strong> <button type="button" class="copy-btn" onclick="copyToClipboard('whatsappNumber')" aria-label="Copy WhatsApp number"><i class='bx bx-copy'></i></button></p>
+                </div>
+                <div class="whatsapp-guidance-step">
+                    <span class="step-number">2</span>
+                    <p>Open WhatsApp and send us a message with your name and donation amount.</p>
+                </div>
+                <div class="whatsapp-guidance-step">
+                    <span class="step-number">3</span>
+                    <p>We will send you our MTN/Airtel Mobile Money details and confirm receipt once payment is received.</p>
+                </div>
+                <div class="whatsapp-guidance-actions">
+                    <a href="https://wa.me/256762123456?text=Hi%20RTI%2C%20I%20would%20like%20to%20make%20a%20donation" class="btn btn-primary" target="_blank" rel="noopener noreferrer"><i class='bx bxl-whatsapp'></i> Open WhatsApp</a>
+                    <button type="button" class="btn btn-outline" onclick="closeDonateModal()">Done</button>
+                </div>
+            </div>
         </div>
     </div>
 

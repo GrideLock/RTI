@@ -24,13 +24,13 @@
 Before starting the server, set these environment variables:
 
 - `STRIPE_SECRET_KEY` — Your Stripe secret key (for card payments)
-- `FLW_SECRET_KEY` — Your Flutterwave secret key (for MTN/Airtel Mobile Money)
 - `BASE_URL` — Your live domain (e.g., `https://yourdomain.com`)
+
+> **Note:** WhatsApp donations are handled manually — no API key needed. Just update the WhatsApp number in `index.html`.
 
 ### Windows (Command Prompt)
 ```cmd
 set STRIPE_SECRET_KEY=sk_test_...
-set FLW_SECRET_KEY=FLWSECK_TEST-...
 set BASE_URL=http://localhost:3000
 node server.js
 ```
@@ -38,7 +38,6 @@ node server.js
 ### Windows (PowerShell)
 ```powershell
 $env:STRIPE_SECRET_KEY="sk_test_..."
-$env:FLW_SECRET_KEY="FLWSECK_TEST-..."
 $env:BASE_URL="http://localhost:3000"
 node server.js
 ```
@@ -46,7 +45,13 @@ node server.js
 ### macOS / Linux
 ```bash
 export STRIPE_SECRET_KEY=sk_test_...
-export FLW_SECRET_KEY=FLWSECK_TEST-...
 export BASE_URL=http://localhost:3000
 node server.js
 ```
+
+## Important: Update the WhatsApp Number
+
+Before using WhatsApp donations, replace the placeholder number in `index.html`:
+
+1. Search for `+256 762 123 456` and replace with your real WhatsApp number
+2. Update the `wa.me` link with the same number (format: `https://wa.me/2567XXXXXXXX`)
