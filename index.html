@@ -18,7 +18,8 @@
                 <ul>
                     <li><a href="#home" class="active">Home</a></li>
                     <li><a href="#about">About</a></li>
-                    <li><a href="#Involved">Get Involved</a></li>
+                    <li><a href="#involved">Get Involved</a></li>
+                    <li><a href="#impact-guide">Impact</a></li>
                     <li><a href="#gallery">Gallery</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
@@ -36,6 +37,7 @@
         <a href="#" class="social-link facebook" aria-label="Facebook" onclick="event.preventDefault()"><i class='bx bxl-facebook'></i></a>
         <a href="#" class="social-link whatsapp" aria-label="WhatsApp" onclick="event.preventDefault()"><i class='bx bxl-whatsapp'></i></a>
         <a href="#" class="social-link instagram" aria-label="Instagram" onclick="event.preventDefault()"><i class='bx bxl-instagram'></i></a>
+        <a href="#" class="social-link twitter" aria-label="twitter" onclick="event.preventDefault()"><i class='bx bxl-twitter'></i></a>
     </div>
     <section class="home" id="home">
         <div class="home-shape home-shape-1" aria-hidden="true"></div>
@@ -52,7 +54,7 @@
                 <p>Together we create opportunities, promote inclusion, and build a lasting bright future for both refugees and host communities across the refugee camps in Uganda.</p>
             </div>
             <div class="home-cta">
-                <a href="#Involved" class="btn btn-primary">Get Involved <i class='bx bx-right-arrow-alt'></i></a>
+                <a href="#involved" class="btn btn-primary">Get Involved <i class='bx bx-right-arrow-alt'></i></a>
                 <a href="#about" class="btn btn-outline">Learn More</a>
             </div>
         </div>
@@ -66,7 +68,7 @@
             </div>
             <div class="about-header">
                 <span class="about-subtitle">Our Mission</span>
-                <h2 class="about-title">About Our Mission</h2>
+                <h2 class="about-title">Our Mission</h2>
                 <p class="about-intro">Rise Together Initiative is a refugee-led organization dedicated to empower youth refugees, and host community undergoing early pregnancy, disabilities and vulnarables through education, skills training, peacebuilding, conflict prevention and sustainable development.</p>
             </div>
             <div class="moto">
@@ -123,9 +125,29 @@
                     </div>
                 </div>
             </div>
+            <div class="whatwedo">
+                 <h2>What We Do</h2>
+                 <p class="about-intro">Rise Together Initiative(RTI) is a registered charitable organization under CBO, headquartered in Isingiro District, Nakivaale Settlement. Founded and led by refugees, we provide disaster relief, education, and social support to vulnerable populations.</p>
+            </div>
             <div class="about-grid">
-                <div class="about-card"></div>
-                <div class="about-card"></div>
+                <div class="about-card">
+                    <div class="about-icon" aria-hidden="true">
+                       <i class='bx bx-handicap'></i> 
+                    </div>
+                    
+                    <h2>Disabilities</h2>
+                    <p>We advocate for equal opportunities and the inclusion of persons with disabilities by promoting their rights, dignity, and active participation in all areas of community life. We work to create an inclusive society where individuals with disabilities have equal access to education, employment, healthcare, social services, and community activities without discrimination or barriers.</p>
+                    <p>Through awareness campaigns, community engagement, and support programs, we encourage acceptance, accessibility, and empowerment for persons with disabilities. We also provide support that helps individuals develop skills, build confidence, and participate fully in social, economic, and cultural activities within their communities.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon" aria-hidden="true">
+                       <i class='bx bx-handicap'></i> 
+                    </div>
+                    
+                    <h2>Disabilities</h2>
+                    <p>We advocate for equal opportunities and the inclusion of persons with disabilities by promoting their rights, dignity, and active participation in all areas of community life. We work to create an inclusive society where individuals with disabilities have equal access to education, employment, healthcare, social services, and community activities without discrimination or barriers.</p>
+                    <p>Through awareness campaigns, community engagement, and support programs, we encourage acceptance, accessibility, and empowerment for persons with disabilities. We also provide support that helps individuals develop skills, build confidence, and participate fully in social, economic, and cultural activities within their communities.</p>
+                </div>
                 <div class="about-card">
                     <div class="about-icon" aria-hidden="true">
                         <i class='bx bx-bullseye'></i>
@@ -187,7 +209,122 @@
         <div class="join-mission-container">
             <h2>Join Our Mission</h2>
             <p>Be part of the change. Together, we can build stronger, more resilient communities through education, empowerment, and sustainable development.</p>
-            <a href="#Involved" class="btn btn-primary">Get Involved Today <i class='bx bx-right-arrow-alt'></i></a>
+            <a href="#involved" class="btn btn-primary">Get Involved Today <i class='bx bx-right-arrow-alt'></i></a>
+        </div>
+    </section>
+    <section class="involved" id="involved">
+        <div class="involved-header">
+            <span class="involved-subtitle">Take Action</span>
+            <h2 class="involved-title">Get Involved</h2>
+            <p class="involved-intro">There are many ways to support Rise Together Initiative. Whether you donate, volunteer, or partner with us, every contribution helps us empower refugee and host communities across Uganda.</p>
+        </div>
+        <div class="involved-container">
+            <div class="involved-card">
+                <div class="involved-icon"><i class='bx bx-donate-heart'></i></div>
+                <h3>Make a Donation</h3>
+                <p>Your financial support directly funds education, skills training, and community development programs. We accept donations via multiple channels to make giving easy and accessible.</p>
+                <ul class="involved-list">
+                    <li><i class='bx bx-check'></i> Airtel Money</li>
+                    <li><i class='bx bx-check'></i> MTN Mobile Money</li>
+                    <li><i class='bx bx-check'></i> Bank Transfer</li>
+                </ul>
+                <button class="btn btn-primary" onclick="openDonateModal()">Donate Now <i class='bx bx-right-arrow-alt'></i></button>
+            </div>
+            <div class="involved-card">
+                <div class="involved-icon"><i class='bx bx-group'></i></div>
+                <h3>Volunteer With Us</h3>
+                <p>Join our team of passionate volunteers and make a direct impact in refugee communities. We welcome local and international volunteers with skills in teaching, mentoring, and community organizing.</p>
+                <ul class="involved-list">
+                    <li><i class='bx bx-check'></i> Teach skills or mentor youth</li>
+                    <li><i class='bx bx-check'></i> Assist with community events</li>
+                    <li><i class='bx bx-check'></i> Help with administrative tasks</li>
+                </ul>
+                <button class="btn btn-outline" onclick="openContactModal('volunteer')">Become a Volunteer</button>
+            </div>
+            <div class="involved-card">
+                <div class="involved-icon"><i class='bx bx-briefcase-alt'></i></div>
+                <h3>Partner With Us</h3>
+                <p>Collaborate as an organization, corporation, or government agency to maximize impact. We actively seek partnerships that expand our reach and strengthen our programs.</p>
+                <ul class="involved-list">
+                    <li><i class='bx bx-check'></i> Corporate sponsorships</li>
+                    <li><i class='bx bx-check'></i> NGO and CBO networks</li>
+                    <li><i class='bx bx-check'></i> Government programs</li>
+                </ul>
+                <button class="btn btn-outline" onclick="openContactModal('partner')">Partner With Us</button>
+            </div>
+        </div>
+        <div class="involved-quick-action">
+            <div class="quick-donation-card">
+                <div class="quick-donation-icon"><i class='bx bxl-whatsapp'></i></div>
+                <div class="quick-donation-text">
+                    <h3>Quick Donation via WhatsApp</h3>
+                    <p>Chat with us directly to complete your donation securely. Our team is ready to assist you with mobile money or bank transfer instructions.</p>
+                    <a href="#" class="btn btn-primary" onclick="event.preventDefault()">Chat on WhatsApp <i class='bx bx-right-arrow-alt'></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="impact-guide" id="impact-guide">
+        <div class="impact-header">
+            <span class="impact-subtitle">Your Impact</span>
+            <h2 class="impact-title">Impact Guide</h2>
+            <p class="impact-intro">See exactly how your contribution transforms lives in Nakivale Settlement and surrounding host communities. Every donation, big or small, creates lasting change.</p>
+        </div>
+        <div class="impact-grid">
+            <div class="impact-card">
+                <div class="impact-amount">$10</div>
+                <div class="impact-icon"><i class='bx bx-book'></i></div>
+                <h3>School Supplies</h3>
+                <p>Provides notebooks, pens, and learning materials for a refugee child for one term.</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-amount">$25</div>
+                <div class="impact-icon"><i class='bx bx-first-aid'></i></div>
+                <h3>Health Kit</h3>
+                <p>Supplies a basic health and hygiene kit for a vulnerable family of four.</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-amount">$50</div>
+                <div class="impact-icon"><i class='bx bx-laptop'></i></div>
+                <h3>Skills Training</h3>
+                <p>Funds a one-month vocational skills training session for a young refugee or host community youth.</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-amount">$100</div>
+                <div class="impact-icon"><i class='bx bx-group'></i></div>
+                <h3>Workshop Session</h3>
+                <p>Covers the cost of a community peacebuilding and conflict resolution workshop for 30 participants.</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-amount">$250</div>
+                <div class="impact-icon"><i class='bx bx-briefcase-alt'></i></div>
+                <h3>Business Starter</h3>
+                <p>Provides startup capital and entrepreneurship mentorship for a refugee entrepreneur.</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-amount">$500+</div>
+                <div class="impact-icon"><i class='bx bx-heart'></i></div>
+                <h3>Program Sponsor</h3>
+                <p>Funds a full program cycle including education, skills training, and follow-up support for a cohort of beneficiaries.</p>
+            </div>
+        </div>
+        <div class="impact-summary">
+            <div class="impact-summary-item">
+                <h3>2,500+</h3>
+                <p>Youth trained since inception</p>
+            </div>
+            <div class="impact-summary-item">
+                <h3>150+</h3>
+                <p>Community workshops held</p>
+            </div>
+            <div class="impact-summary-item">
+                <h3>12</h3>
+                <p>Active programs running</p>
+            </div>
+            <div class="impact-summary-item">
+                <h3>85%</h3>
+                <p>Funds go directly to programs</p>
+            </div>
         </div>
     </section>
     <footer class="footer">
@@ -207,7 +344,8 @@
                 <ul>
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">About</a></li>
-                    <li><a href="#Involved">Get Involved</a></li>
+                    <li><a href="#involved">Get Involved</a></li>
+                    <li><a href="#impact-guide">Impact</a></li>
                     <li><a href="#gallery">Gallery</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
@@ -227,6 +365,7 @@
                     <a href="#" aria-label="Facebook" onclick="event.preventDefault()"><i class='bx bxl-facebook'></i></a>
                     <a href="#" aria-label="WhatsApp" onclick="event.preventDefault()"><i class='bx bxl-whatsapp'></i></a>
                     <a href="#" aria-label="Instagram" onclick="event.preventDefault()"><i class='bx bxl-instagram'></i></a>
+                    <a href="#" class="twitter" aria-label="twitter" onclick="event.preventDefault()"><i class='bx bxl-twitter'></i></a>
                 </div>
             </div>
         </div>
@@ -234,6 +373,105 @@
             <p>&copy; 2026 Rise Together Initiative. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Donation Modal -->
+    <div class="modal" id="donateModal" inert>
+        <div class="modal-overlay" onclick="closeDonateModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeDonateModal()" aria-label="Close donation modal"><i class='bx bx-x'></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class='bx bx-donate-heart'></i></div>
+                <h2>Make a Donation</h2>
+                <p>Your contribution directly supports education, skills training, and community development.</p>
+            </div>                <form id="donateForm" class="modal-form">
+                <div class="form-group">
+                    <label for="donateAmount">Donation Amount (USD)</label>
+                    <div class="amount-options">
+                        <button type="button" class="amount-btn" data-amount="10">$10</button>
+                        <button type="button" class="amount-btn" data-amount="25">$25</button>
+                        <button type="button" class="amount-btn" data-amount="50">$50</button>
+                        <button type="button" class="amount-btn" data-amount="100">$100</button>
+                        <button type="button" class="amount-btn" data-amount="250">$250</button>
+                    </div>
+                    <input type="number" id="donateAmount" name="amount" min="1" step="0.01" placeholder="Or enter custom amount" autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="donateName">Full Name</label>
+                    <input type="text" id="donateName" name="name" placeholder="John Doe" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="donateEmail">Email Address</label>
+                    <input type="email" id="donateEmail" name="email" placeholder="your@email.com" autocomplete="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="donatePhone">Phone Number <span class="optional">(required for Mobile Money)</span></label>
+                    <input type="tel" id="donatePhone" name="phone" placeholder="+256 XXX XXX XXX" autocomplete="tel">
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <div class="payment-options" role="radiogroup" aria-label="Payment method">
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="flutterwave" checked aria-label="Pay with MTN or Airtel Mobile Money">
+                            <span class="payment-option-box">
+                                <i class='bx bx-mobile-alt' aria-hidden="true"></i>
+                                <span>MTN/Airtel Mobile Money</span>
+                            </span>
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="stripe" aria-label="Pay with Credit or Debit Card">
+                            <span class="payment-option-box">
+                                <i class='bx bx-credit-card' aria-hidden="true"></i>
+                                <span>Credit/Debit Card</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary modal-submit">
+                    <span class="submit-text">Proceed to Payment <i class='bx bx-right-arrow-alt'></i></span>
+                    <span class="submit-loader" style="display:none"><i class='bx bx-loader-alt bx-spin'></i> Processing...</span>
+                </button>
+                <p class="form-note"><i class='bx bx-lock-alt'></i> Secure payment. Your information is protected.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Modal -->
+    <div class="modal" id="contactModal" inert>
+        <div class="modal-overlay" onclick="closeContactModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeContactModal()" aria-label="Close contact modal"><i class='bx bx-x'></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class='bx bx-envelope'></i></div>
+                <h2 id="contactModalTitle">Get In Touch</h2>
+                <p id="contactModalDesc">Fill out the form below and our team will respond within 24 hours.</p>
+            </div>
+            <form id="contactForm" class="modal-form">
+                <input type="hidden" id="contactType" name="type" value="general">
+                <div class="form-group">
+                    <label for="contactName">Full Name</label>
+                    <input type="text" id="contactName" name="name" placeholder="Your full name" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email Address</label>
+                    <input type="email" id="contactEmail" name="email" placeholder="your@email.com" autocomplete="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactPhone">Phone Number <span class="optional">(optional)</span></label>
+                    <input type="tel" id="contactPhone" name="phone" placeholder="+256 XXX XXX XXX" autocomplete="tel">
+                </div>
+                <div class="form-group">
+                    <label for="contactMessage">Message</label>
+                    <textarea id="contactMessage" name="message" rows="4" placeholder="Tell us how you would like to help or partner with us..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary modal-submit">
+                    <span class="submit-text">Send Message <i class='bx bx-right-arrow-alt'></i></span>
+                    <span class="submit-loader" style="display:none"><i class='bx bx-loader-alt bx-spin'></i> Sending...</span>
+                </button>
+                <div class="form-status" id="contactStatus"></div>
+            </form>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
