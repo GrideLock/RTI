@@ -384,6 +384,95 @@ if (contactForm) {
     });
 }
 
+/* Gallery scroll reveal */
+const galleryItems = document.querySelectorAll('.gallery-item');
+if (galleryItems.length > 0) {
+    const galleryObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { root: null, rootMargin: '0px', threshold: 0.1 });
+    galleryItems.forEach(item => galleryObserver.observe(item));
+}
+
+/* Gallery Lightbox */
+const galleryLightbox = document.getElementById('galleryLightbox');
+const lightboxImage = document.getElementById('lightboxImage');
+const lightboxTitle = document.getElementById('lightboxTitle');
+const lightboxDesc = document.getElementById('lightboxDesc');
+let currentGalleryIndex = 1;
+
+function getGalleryData() {
+    const items = document.querySelectorAll('.gallery-item');
+    return Array.from(items).map(item => {
+        const img = item.querySelector('img');
+        const h3 = item.querySelector('.gallery-overlay-content h3');
+        const p = item.querySelector('.gallery-overlay-content p');
+        return {
+            src: img ? img.getAttribute('src') : '',
+            alt: img ? img.getAttribute('alt') : '',
+            title: h3 ? h3.textContent : '',
+            desc: p ? p.textContent : ''
+        };
+    });
+}
+
+function openGalleryLightbox(index) {
+    const data = getGalleryData();
+    if (!data.length || index < 1 || index >= data.length) return;
+    currentGalleryIndex = index;
+    const item = data[index];
+    if (lightboxImage) {
+        lightboxImage.src = item.src;
+        lightboxImage.alt = item.alt;
+    }
+    if (lightboxTitle) lightboxTitle.textContent = item.title;
+    if (lightboxDesc) lightboxDesc.textContent = item.desc;
+    if (galleryLightbox) {
+        galleryLightbox.classList.add('active');
+        galleryLightbox.removeAttribute('inert');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeGalleryLightbox() {
+    if (galleryLightbox) {
+        galleryLightbox.classList.remove('active');
+        galleryLightbox.setAttribute('inert', '');
+        document.body.style.overflow = '';
+    }
+}
+
+function navigateGallery(direction) {
+    const data = getGalleryData();
+    if (!data.length) return;
+    let newIndex = currentGalleryIndex + direction;
+    if (newIndex < 1) newIndex = data.length - 1;
+    if (newIndex >= data.length) newIndex = 1;
+    openGalleryLightbox(newIndex);
+}
+
+/* Gallery item click opens lightbox */
+document.querySelectorAll('.gallery-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+        const index = parseInt(item.getAttribute('data-index'), 10);
+        if (!isNaN(index)) {
+            openGalleryLightbox(index);
+        }
+    });
+});
+
+/* Lightbox keyboard navigation */
+document.addEventListener('keydown', (e) => {
+    if (!galleryLightbox || !galleryLightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') closeGalleryLightbox();
+    if (e.key === 'ArrowLeft') navigateGallery(-1);
+    if (e.key === 'ArrowRight') navigateGallery(1);
+});
+
 /* Payment success/cancel message handling */
 (function handlePaymentStatus() {
     const urlParams = new URLSearchParams(window.location.search);
