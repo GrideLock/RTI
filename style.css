@@ -353,6 +353,9 @@ body.dark-mode .btn-outline:hover{
     z-index: 0;
     pointer-events: none;
 }
+.home-shape-1 img{
+    width: 300px;
+}
 .home-shape-1{
     width: 300px;
     height: 300px;
@@ -373,6 +376,9 @@ body.dark-mode .btn-outline:hover{
     top: 50%;
     right: 15%;
     animation: float 6s ease-in-out infinite 2s;
+}
+.home-shape-2 img{
+    width: 200px;
 }
 @keyframes float {
     0%, 100%{
