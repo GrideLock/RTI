@@ -38,6 +38,7 @@
         <a href="https://wa.me/qr/P6VACQJ4VMMFG1" class="social-link whatsapp" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer"><i class='bx bxl-whatsapp'></i></a>
         <a href="https://www.instagram.com/risetogetherinitiative8/" class="social-link instagram" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><i class='bx bxl-instagram'></i></a>
         <a href="https://x.com/RiseTogethx2" class="social-link twitter" aria-label="twitter" target="_blank" rel="noopener noreferrer"><i class='bx bxl-twitter'></i></a>
+        <a href="https://www.linkedin.com/in/simon-shekahogo-713738287" class="social-link twitter" aria-label="linkedin" target="_blank" rel="noopener noreferrer"><i class='bx bxl-linkedin-square'></i></a>
     </div>
     <section class="home" id="home">
         <div class="home-shape home-shape-1" aria-hidden="true"><img src="RTI-logo2.png"></div>
@@ -346,23 +347,163 @@
             <h2 class="gallery-title">Gallery</h2>
             <p class="gallery-intro">Explore moments from our programs and community activities. Each image tells a story of empowerment, education, and transformation across Nakivale Settlement and beyond.</p>
         </div>
-    </section>
 
-    <!-- Gallery Lightbox -->
-    <div class="gallery-lightbox" id="galleryLightbox" inert>
-        <div class="lightbox-overlay" onclick="closeGalleryLightbox()"></div>
-        <button class="lightbox-close" onclick="closeGalleryLightbox()" aria-label="Close lightbox"><i class='bx bx-x'></i></button>
-        <button class="lightbox-nav lightbox-prev" onclick="navigateGallery(-1)" aria-label="Previous image"><i class='bx bx-chevron-left'></i></button>
-        <button class="lightbox-nav lightbox-next" onclick="navigateGallery(1)" aria-label="Next image"><i class='bx bx-chevron-right'></i></button>
-        <div class="lightbox-content">
-            <img src="" alt="" id="lightboxImage">
-            <div class="lightbox-caption">
-                <h3 id="lightboxTitle"></h3>
-                <p id="lightboxDesc"></p>
+        <div class="gallery-section">
+            <h3 class="gallery-section-title">Meet Our Team</h3>
+            <div class="gallery-team-grid">
+                <div class="gallery-team-card">
+                    <div class="gallery-team-image">
+                        <img src="rti_5.jpeg" alt="Simon Shikahogo - Executive Director and Founder">
+                        <div class="gallery-team-overlay">
+                            <button class="gallery-view-btn" aria-label="View image" onclick="openGalleryLightbox(0)"><i class='bx bx-expand-alt'></i></button>
+                        </div>
+                    </div>
+                    <div class="gallery-team-info">
+                        <h4>Simon Shikahogo</h4>
+                        <span>Executive Director & Founder</span>
+                    </div>
+                </div>
+                <div class="gallery-team-card">
+                    <div class="gallery-team-image">
+                        <img src="rti_4.jpeg" alt="Dodo Lugali - Co-Founder Secretary">
+                        <div class="gallery-team-overlay">
+                            <button class="gallery-view-btn" aria-label="View image" onclick="openGalleryLightbox(1)"><i class='bx bx-expand-alt'></i></button>
+                        </div>
+                    </div>
+                    <div class="gallery-team-info">
+                        <h4>Dodo Lugali</h4>
+                        <span>Co-Founder & Secretary</span>
+                    </div>
+                </div>
+                <div class="gallery-team-card">
+                    <div class="gallery-team-image">
+                        <img src="rti_3.jpeg" alt="Vicky Musafiri - Co-Founder Program Coordinator">
+                        <div class="gallery-team-overlay">
+                            <button class="gallery-view-btn" aria-label="View image" onclick="openGalleryLightbox(2)"><i class='bx bx-expand-alt'></i></button>
+                        </div>
+                    </div>
+                    <div class="gallery-team-info">
+                        <h4>Vicky Musafiri</h4>
+                        <span>Co-Founder & Program Coordinator</span>
+                    </div>
+                </div>
+                <div class="gallery-team-card">
+                    <div class="gallery-team-image">
+                        <img src="rti_2.jpeg" alt="Zawadi Masaro - Co-Founder Treasurer">
+                        <div class="gallery-team-overlay">
+                            <button class="gallery-view-btn" aria-label="View image" onclick="openGalleryLightbox(3)"><i class='bx bx-expand-alt'></i></button>
+                        </div>
+                    </div>
+                    <div class="gallery-team-info">
+                        <h4>Zawadi Masaro</h4>
+                        <span>Co-Founder & Treasurer</span>
+                    </div>
+                </div>
+                <div class="gallery-team-card">
+                    <div class="gallery-team-image">
+                        <img src="rti_1.jpeg" alt="Timonona Belodi - Vice Treasurer">
+                        <div class="gallery-team-overlay">
+                            <button class="gallery-view-btn" aria-label="View image" onclick="openGalleryLightbox(4)"><i class='bx bx-expand-alt'></i></button>
+                        </div>
+                    </div>
+                    <div class="gallery-team-info">
+                        <h4>Timonona Belodi</h4>
+                        <span>Vice Treasurer</span>
+                    </div>
+                </div>
+                <div class="gallery-team-card">
+                    <div class="gallery-team-image">
+                        <img src="rti_17.jpeg" alt="Timonona Belodi - Vice Treasurer">
+                        <div class="gallery-team-overlay">
+                            <button class="gallery-view-btn" aria-label="View image" onclick="openGalleryLightbox(5)"><i class='bx bx-expand-alt'></i></button>
+                        </div>
+                    </div>
+                    <div class="gallery-team-info">
+                        <h4>Emmanuel Birasa</h4>
+                        <span>Web developer</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
+        <div class="gallery-section">
+            <h3 class="gallery-section-title">Programs in Action</h3>
+            <div class="gallery-activities-grid">
+                <div class="gallery-activity-card" onclick="openGalleryLightbox(5)">
+                    <div class="gallery-activity-image">
+                        <img src="rti_6.jpeg" alt="Community outreach session">
+                    </div>
+                    <div class="gallery-activity-caption">
+                        <h4>Community Outreach</h4>
+                        <p>Engaging with local communities to spread awareness and provide support to vulnerable groups.</p>
+                    </div>
+                </div>
+                <div class="gallery-activity-card" onclick="openGalleryLightbox(6)">
+                    <div class="gallery-activity-image">
+                        <img src="rti_8.jpeg" alt="Skills training workshop">
+                    </div>
+                    <div class="gallery-activity-caption">
+                        <h4>Skills Training</h4>
+                        <p>Empowering youth and women with practical vocational skills for self-reliance.</p>
+                    </div>
+                </div>
+                <div class="gallery-activity-card" onclick="openGalleryLightbox(7)">
+                    <div class="gallery-activity-image">
+                        <img src="rti_9.jpeg" alt="Community dialogue meeting">
+                    </div>
+                    <div class="gallery-activity-caption">
+                        <h4>Community Dialogue</h4>
+                        <p>Bringing refugees and host communities together to foster peace and mutual understanding.</p>
+                    </div>
+                </div>
+                <div class="gallery-activity-card" onclick="openGalleryLightbox(8)">
+                    <div class="gallery-activity-image">
+                        <img src="rti_10.jpeg" alt="Education program session">
+                    </div>
+                    <div class="gallery-activity-caption">
+                        <h4>Education Program</h4>
+                        <p>Providing learning opportunities and educational resources to refugee children and youth.</p>
+                    </div>
+                </div>
+                <div class="gallery-activity-card" onclick="openGalleryLightbox(9)">
+                    <div class="gallery-activity-image">
+                        <img src="rti_11.jpeg" alt="Peacebuilding workshop">
+                    </div>
+                    <div class="gallery-activity-caption">
+                        <h4>Peacebuilding Workshop</h4>
+                        <p>Training community members in conflict resolution and peaceful coexistence strategies.</p>
+                    </div>
+                </div>
+                <div class="gallery-activity-card" onclick="openGalleryLightbox(10)">
+                    <div class="gallery-activity-image">
+                        <img src="rti_14.jpeg" alt="Agriculture development training">
+                    </div>
+                    <div class="gallery-activity-caption">
+                        <h4>Child support</h4>
+                        <p>Let us continue to stand with refugee children, amplify their voices, and work together to ensure that every child grows up with dignity, hope, and the chance to succeed.</p>
+                    </div>
+                </div>
+                <div class="gallery-activity-card" onclick="openGalleryLightbox(11)">
+                    <div class="gallery-activity-image">
+                        <img src="rti_15.jpeg" alt="Leadership development session">
+                    </div>
+                    <div class="gallery-activity-caption">
+                        <h4>Leadership Development</h4>
+                        <p>Nurturing young leaders with the confidence and skills to drive community change.</p>
+                    </div>
+                </div>
+                <div class="gallery-activity-card" onclick="openGalleryLightbox(12)">
+                    <div class="gallery-activity-image">
+                        <img src="rti_16.jpeg" alt="Financial literacy training">
+                    </div>
+                    <div class="gallery-activity-caption">
+                        <h4>Teaching Peace</h4>
+                        <p>Equipping beneficiaries with budgeting, saving, and business planning skills.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-brand">
@@ -402,6 +543,7 @@
                     <a href="https://wa.me/qr/P6VACQJ4VMMFG1" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer"><i class='bx bxl-whatsapp'></i></a>
                     <a href="https://www.instagram.com/risetogetherinitiative8/" aria-label="Instagram" target="_blank" rel="noopener noreferrer"><i class='bx bxl-instagram'></i></a>
                     <a href="https://x.com/RiseTogethx2" class="twitter" aria-label="twitter" target="_blank" rel="noopener noreferrer"><i class='bx bxl-twitter'></i></a>
+                    <a href="https://www.linkedin.com/in/simon-shekahogo-713738287" class="twitter" aria-label="linkedin" target="_blank" rel="noopener noreferrer"><i class='bx bxl-linkedin-square'></i></a>
                 </div>
             </div>
         </div>
@@ -409,6 +551,21 @@
             <p>&copy; 2026 Rise Together Initiative. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Gallery Lightbox -->
+    <div class="gallery-lightbox" id="galleryLightbox" inert>
+        <div class="lightbox-overlay" onclick="closeGalleryLightbox()"></div>
+        <button class="lightbox-close" onclick="closeGalleryLightbox()" aria-label="Close lightbox"><i class='bx bx-x'></i></button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigateGallery(-1)" aria-label="Previous image"><i class='bx bx-chevron-left'></i></button>
+        <button class="lightbox-nav lightbox-next" onclick="navigateGallery(1)" aria-label="Next image"><i class='bx bx-chevron-right'></i></button>
+        <div class="lightbox-content">
+            <img src="" alt="" id="lightboxImage">
+            <div class="lightbox-caption">
+                <h3 id="lightboxTitle"></h3>
+                <p id="lightboxDesc"></p>
+            </div>
+        </div>
+    </div>
 
     <!-- Donation Modal -->
     <div class="modal" id="donateModal" inert>
@@ -488,7 +645,7 @@
                     <p>We will send you our MTN/Airtel Mobile Money details and confirm receipt once payment is received.</p>
                 </div>
                 <div class="whatsapp-guidance-actions">
-                    <a href="https://wa.me/256762123456?text=Hi%20RTI%2C%20I%20would%20like%20to%20make%20a%20donation" class="btn btn-primary" target="_blank" rel="noopener noreferrer"><i class='bx bxl-whatsapp'></i> Open WhatsApp</a>
+                    <a href="https://wa.me/256740453553" class="btn btn-primary" target="_blank" rel="noopener noreferrer"><i class='bx bxl-whatsapp'></i> Open WhatsApp</a>
                     <button type="button" class="btn btn-outline" onclick="closeDonateModal()">Done</button>
                 </div>
             </div>

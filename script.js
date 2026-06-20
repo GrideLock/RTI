@@ -385,8 +385,9 @@ if (contactForm) {
 }
 
 /* Gallery scroll reveal */
-const galleryItems = document.querySelectorAll('.gallery-item');
-if (galleryItems.length > 0) {
+const galleryTeamCards = document.querySelectorAll('.gallery-team-card');
+const galleryActivityCards = document.querySelectorAll('.gallery-activity-card');
+if (galleryTeamCards.length > 0 || galleryActivityCards.length > 0) {
     const galleryObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -395,34 +396,65 @@ if (galleryItems.length > 0) {
             }
         });
     }, { root: null, rootMargin: '0px', threshold: 0.1 });
-    galleryItems.forEach(item => galleryObserver.observe(item));
+    galleryTeamCards.forEach(item => galleryObserver.observe(item));
+    galleryActivityCards.forEach(item => galleryObserver.observe(item));
 }
+
+/* Make activity cards keyboard accessible */
+galleryActivityCards.forEach((card, index) => {
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', 'View ' + (card.querySelector('.gallery-activity-caption h4')?.textContent || 'image'));
+    card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openGalleryLightbox(5 + index);
+        }
+    });
+});
 
 /* Gallery Lightbox */
 const galleryLightbox = document.getElementById('galleryLightbox');
 const lightboxImage = document.getElementById('lightboxImage');
 const lightboxTitle = document.getElementById('lightboxTitle');
 const lightboxDesc = document.getElementById('lightboxDesc');
-let currentGalleryIndex = 1;
+let currentGalleryIndex = 0;
 
 function getGalleryData() {
-    const items = document.querySelectorAll('.gallery-item');
-    return Array.from(items).map(item => {
-        const img = item.querySelector('img');
-        const h3 = item.querySelector('.gallery-overlay-content h3');
-        const p = item.querySelector('.gallery-overlay-content p');
-        return {
+    const teamCards = document.querySelectorAll('.gallery-team-card');
+    const activityCards = document.querySelectorAll('.gallery-activity-card');
+    const data = [];
+
+    teamCards.forEach(card => {
+        const img = card.querySelector('.gallery-team-image img');
+        const name = card.querySelector('.gallery-team-info h4');
+        const role = card.querySelector('.gallery-team-info span');
+        data.push({
             src: img ? img.getAttribute('src') : '',
             alt: img ? img.getAttribute('alt') : '',
-            title: h3 ? h3.textContent : '',
-            desc: p ? p.textContent : ''
-        };
+            title: name ? name.textContent : '',
+            desc: role ? role.textContent : ''
+        });
     });
+
+    activityCards.forEach(card => {
+        const img = card.querySelector('.gallery-activity-image img');
+        const h4 = card.querySelector('.gallery-activity-caption h4');
+        const p = card.querySelector('.gallery-activity-caption p');
+        data.push({
+            src: img ? img.getAttribute('src') : '',
+            alt: img ? img.getAttribute('alt') : '',
+            title: h4 ? h4.textContent : '',
+            desc: p ? p.textContent : ''
+        });
+    });
+
+    return data;
 }
 
 function openGalleryLightbox(index) {
     const data = getGalleryData();
-    if (!data.length || index < 1 || index >= data.length) return;
+    if (!data.length || index < 0 || index >= data.length) return;
     currentGalleryIndex = index;
     const item = data[index];
     if (lightboxImage) {
@@ -450,20 +482,10 @@ function navigateGallery(direction) {
     const data = getGalleryData();
     if (!data.length) return;
     let newIndex = currentGalleryIndex + direction;
-    if (newIndex < 1) newIndex = data.length - 1;
-    if (newIndex >= data.length) newIndex = 1;
+    if (newIndex < 0) newIndex = data.length - 1;
+    if (newIndex >= data.length) newIndex = 0;
     openGalleryLightbox(newIndex);
 }
-
-/* Gallery item click opens lightbox */
-document.querySelectorAll('.gallery-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-        const index = parseInt(item.getAttribute('data-index'), 10);
-        if (!isNaN(index)) {
-            openGalleryLightbox(index);
-        }
-    });
-});
 
 /* Lightbox keyboard navigation */
 document.addEventListener('keydown', (e) => {
