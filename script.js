@@ -400,6 +400,79 @@ if (galleryTeamCards.length > 0 || galleryActivityCards.length > 0) {
     galleryActivityCards.forEach(item => galleryObserver.observe(item));
 }
 
+/* Contact section scroll reveal */
+const contactInfoCards = document.querySelectorAll('.contact-info-card');
+const contactFormWrapper = document.querySelector('.contact-form-wrapper');
+const contactSocialBanner = document.querySelector('.contact-social-banner');
+if (contactInfoCards.length > 0 || contactFormWrapper || contactSocialBanner) {
+    const contactObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { root: null, rootMargin: '0px', threshold: 0.1 });
+    contactInfoCards.forEach(card => contactObserver.observe(card));
+    if (contactFormWrapper) contactObserver.observe(contactFormWrapper);
+    if (contactSocialBanner) contactObserver.observe(contactSocialBanner);
+}
+
+/* Section Contact Form Submission */
+const sectionContactForm = document.getElementById('sectionContactForm');
+const sectionContactStatus = document.getElementById('sectionContactStatus');
+if (sectionContactForm) {
+    sectionContactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const submitBtn = sectionContactForm.querySelector('.contact-submit');
+        const submitText = submitBtn.querySelector('.submit-text');
+        const submitLoader = submitBtn.querySelector('.submit-loader');
+
+        submitText.style.display = 'none';
+        submitLoader.style.display = 'inline-flex';
+        submitBtn.disabled = true;
+
+        const formData = {
+            type: document.getElementById('sectionContactSubject').value,
+            name: document.getElementById('sectionContactName').value,
+            email: document.getElementById('sectionContactEmail').value,
+            phone: document.getElementById('sectionContactPhone').value,
+            message: document.getElementById('sectionContactMessage').value
+        };
+
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                sectionContactStatus.textContent = 'Thank you! Your message has been sent successfully. We will get back to you soon.';
+                sectionContactStatus.className = 'form-status success';
+                sectionContactForm.reset();
+                setTimeout(() => {
+                    sectionContactStatus.className = 'form-status';
+                    sectionContactStatus.textContent = '';
+                }, 5000);
+            } else {
+                sectionContactStatus.textContent = data.error || 'Failed to send message. Please try again.';
+                sectionContactStatus.className = 'form-status error';
+            }
+        } catch (err) {
+            console.error('Contact form error:', err);
+            sectionContactStatus.textContent = 'Network error. Please check your connection and try again.';
+            sectionContactStatus.className = 'form-status error';
+        } finally {
+            submitText.style.display = 'inline-flex';
+            submitLoader.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    });
+}
+
 /* Make activity cards keyboard accessible */
 galleryActivityCards.forEach((card, index) => {
     card.setAttribute('tabindex', '0');
