@@ -3,6 +3,15 @@ const menuIcon = document.getElementById('menu-icon');
 const navbar = document.getElementById('navbar');
 const menuIconImg = menuIcon.querySelector('i');
 
+function closeMobileMenu(restoreFocus = false) {
+    if (!navbar.classList.contains('active')) return;
+    navbar.classList.remove('active');
+    menuIcon.setAttribute('aria-expanded', 'false');
+    menuIconImg.classList.remove('bx-x');
+    menuIconImg.classList.add('bx-menu');
+    if (restoreFocus) menuIcon.focus();
+}
+
 menuIcon.addEventListener('click', () => {
     navbar.classList.toggle('active');
     const isExpanded = navbar.classList.contains('active');
@@ -10,6 +19,8 @@ menuIcon.addEventListener('click', () => {
     if (isExpanded) {
         menuIconImg.classList.remove('bx-menu');
         menuIconImg.classList.add('bx-x');
+        const firstNavLink = navbar.querySelector('a');
+        if (firstNavLink) firstNavLink.focus();
     } else {
         menuIconImg.classList.remove('bx-x');
         menuIconImg.classList.add('bx-menu');
@@ -20,11 +31,30 @@ menuIcon.addEventListener('click', () => {
 const navLinks = document.querySelectorAll('.navbar ul li a');
 navLinks.forEach(link => {
     link.addEventListener('click', () => {
-        navbar.classList.remove('active');
-        menuIcon.setAttribute('aria-expanded', 'false');
-        menuIconImg.classList.remove('bx-x');
-        menuIconImg.classList.add('bx-menu');
+        closeMobileMenu(false);
     });
+});
+
+/* Trap keyboard focus inside open mobile menu and close on Escape */
+document.addEventListener('keydown', (e) => {
+    if (!navbar.classList.contains('active')) return;
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        closeMobileMenu(true);
+        return;
+    }
+    if (e.key === 'Tab') {
+        const menuFocusable = [menuIcon, ...Array.from(navLinks)];
+        const first = menuFocusable[0];
+        const last = menuFocusable[menuFocusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+        }
+    }
 });
 
 /* Scroll reveal animation for cards */
@@ -74,8 +104,10 @@ function updateActiveNavLink() {
         const targetId = link.getAttribute('href')?.replace('#', '');
         if (targetId === activeId) {
             link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
         } else {
             link.classList.remove('active');
+            link.removeAttribute('aria-current');
         }
     });
 }
@@ -96,17 +128,26 @@ const themeToggle = document.getElementById('theme-toggle');
 const themeIcon = themeToggle.querySelector('i');
 const body = document.body;
 
+function syncThemeToggleA11y(isDark) {
+    themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+}
+
 // Check local storage for saved theme
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme === 'dark') {
     body.classList.add('dark-mode');
     themeIcon.classList.remove('bx-moon');
     themeIcon.classList.add('bx-sun');
+    syncThemeToggleA11y(true);
+} else {
+    syncThemeToggleA11y(false);
 }
 
 themeToggle.addEventListener('click', () => {
     body.classList.toggle('dark-mode');
-    if (body.classList.contains('dark-mode')) {
+    const isDark = body.classList.contains('dark-mode');
+    if (isDark) {
         themeIcon.classList.remove('bx-moon');
         themeIcon.classList.add('bx-sun');
         localStorage.setItem('theme', 'dark');
@@ -115,6 +156,7 @@ themeToggle.addEventListener('click', () => {
         themeIcon.classList.add('bx-moon');
         localStorage.setItem('theme', 'light');
     }
+    syncThemeToggleA11y(isDark);
 });
 
 /* Typewriter animation for about-moto */
@@ -162,6 +204,61 @@ themeToggle.addEventListener('click', () => {
     setTimeout(typeWriter, 1000);
 })();
 
+/* Accessible Dialog Focus Trap & Restoration */
+let activeDialog = null;
+let lastFocusedBeforeDialog = null;
+const FOCUSABLE_SELECTOR = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function getFocusableElements(container) {
+    if (!container) return [];
+    return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR)).filter(el => {
+        const style = window.getComputedStyle(el);
+        return style.display !== 'none' && style.visibility !== 'hidden' && el.closest('[style*="display:none"], [style*="display: none"]') === null;
+    });
+}
+
+function activateDialogFocus(dialogEl, focusSelector) {
+    if (!dialogEl) return;
+    if (activeDialog !== dialogEl) {
+        lastFocusedBeforeDialog = document.activeElement;
+        activeDialog = dialogEl;
+        const target = (focusSelector && dialogEl.querySelector(focusSelector)) || getFocusableElements(dialogEl)[0];
+        if (target) {
+            requestAnimationFrame(() => target.focus());
+        }
+    }
+}
+
+function releaseDialogFocus(dialogEl) {
+    if (activeDialog === dialogEl) {
+        activeDialog = null;
+        const toRestore = lastFocusedBeforeDialog;
+        lastFocusedBeforeDialog = null;
+        if (toRestore && typeof toRestore.focus === 'function') {
+            toRestore.focus();
+        }
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    if (!activeDialog || e.key !== 'Tab') return;
+    const focusables = getFocusableElements(activeDialog);
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey) {
+        if (document.activeElement === first || !activeDialog.contains(document.activeElement)) {
+            e.preventDefault();
+            last.focus();
+        }
+    } else {
+        if (document.activeElement === last || !activeDialog.contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+        }
+    }
+});
+
 /* Modal Functions */
 const donateModal = document.getElementById('donateModal');
 const contactModal = document.getElementById('contactModal');
@@ -174,29 +271,31 @@ function _openDonateModal() {
         donateModal.classList.add('active');
         donateModal.removeAttribute('inert');
         document.body.style.overflow = 'hidden';
+        activateDialogFocus(donateModal, '#donateAmount');
     }
 }
 
 function closeDonateModal() {
-    if (donateModal) {
+    if (donateModal && donateModal.classList.contains('active')) {
         donateModal.classList.remove('active');
         donateModal.setAttribute('inert', '');
         document.body.style.overflow = '';
+        releaseDialogFocus(donateModal);
     }
 }
 
 function openDonateModal() {
-    _openDonateModal();
     if (donateForm) donateForm.style.display = 'flex';
     if (whatsappGuidance) whatsappGuidance.style.display = 'none';
     if (donateSubmitBtn) {
-        donateSubmitBtn.querySelector('.submit-text').innerHTML = 'Proceed to Payment <i class="bx bx-right-arrow-alt"></i>';
+        donateSubmitBtn.querySelector('.submit-text').innerHTML = 'Proceed to Payment <i class="bx bx-right-arrow-alt" aria-hidden="true"></i>';
     }
     if (donateFormNote) {
-        donateFormNote.innerHTML = '<i class="bx bx-lock-alt"></i> Secure payment. Your information is protected.';
+        donateFormNote.innerHTML = '<i class="bx bx-lock-alt" aria-hidden="true"></i> Secure payment. Your information is protected.';
     }
     const stripeRadio = document.querySelector('input[name="paymentMethod"][value="stripe"]');
     if (stripeRadio) stripeRadio.checked = true;
+    _openDonateModal();
 }
 
 function openContactModal(type = 'general') {
@@ -239,14 +338,17 @@ function openContactModal(type = 'general') {
                 ? 'I would like to request the latest Rise Together Initiative impact report...'
                 : 'Tell us how you would like to help or partner with us...';
         }
+
+        activateDialogFocus(contactModal, '#contactName');
     }
 }
 
 function closeContactModal() {
-    if (contactModal) {
+    if (contactModal && contactModal.classList.contains('active')) {
         contactModal.classList.remove('active');
         contactModal.setAttribute('inert', '');
         document.body.style.overflow = '';
+        releaseDialogFocus(contactModal);
     }
 }
 
@@ -264,8 +366,12 @@ const amountInput = document.getElementById('donateAmount');
 
 amountBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        amountBtns.forEach(b => b.classList.remove('selected'));
+        amountBtns.forEach(b => {
+            b.classList.remove('selected');
+            b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('selected');
+        btn.setAttribute('aria-pressed', 'true');
         if (amountInput) {
             amountInput.value = btn.dataset.amount;
         }
@@ -275,7 +381,10 @@ amountBtns.forEach(btn => {
 /* Clear amount button selection when user types custom amount */
 if (amountInput) {
     amountInput.addEventListener('input', () => {
-        amountBtns.forEach(b => b.classList.remove('selected'));
+        amountBtns.forEach(b => {
+            b.classList.remove('selected');
+            b.setAttribute('aria-pressed', 'false');
+        });
     });
 }
 
@@ -288,11 +397,11 @@ const whatsappGuidance = document.getElementById('whatsappGuidance');
 function updatePaymentMethodUI() {
     const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || 'stripe';
     if (paymentMethod === 'whatsapp') {
-        donateSubmitBtn.querySelector('.submit-text').innerHTML = 'Get Payment Instructions <i class="bx bx-right-arrow-alt"></i>';
-        donateFormNote.innerHTML = '<i class="bx bx-info-circle"></i> You will receive payment details via WhatsApp.';
+        donateSubmitBtn.querySelector('.submit-text').innerHTML = 'Get Payment Instructions <i class="bx bx-right-arrow-alt" aria-hidden="true"></i>';
+        donateFormNote.innerHTML = '<i class="bx bx-info-circle" aria-hidden="true"></i> You will receive payment details via WhatsApp.';
     } else {
-        donateSubmitBtn.querySelector('.submit-text').innerHTML = 'Proceed to Payment <i class="bx bx-right-arrow-alt"></i>';
-        donateFormNote.innerHTML = '<i class="bx bx-lock-alt"></i> Secure payment. Your information is protected.';
+        donateSubmitBtn.querySelector('.submit-text').innerHTML = 'Proceed to Payment <i class="bx bx-right-arrow-alt" aria-hidden="true"></i>';
+        donateFormNote.innerHTML = '<i class="bx bx-lock-alt" aria-hidden="true"></i> Secure payment. Your information is protected.';
     }
 }
 
@@ -651,14 +760,16 @@ function openGalleryLightbox(index) {
         galleryLightbox.classList.add('active');
         galleryLightbox.removeAttribute('inert');
         document.body.style.overflow = 'hidden';
+        activateDialogFocus(galleryLightbox, '.lightbox-close');
     }
 }
 
 function closeGalleryLightbox() {
-    if (galleryLightbox) {
+    if (galleryLightbox && galleryLightbox.classList.contains('active')) {
         galleryLightbox.classList.remove('active');
         galleryLightbox.setAttribute('inert', '');
         document.body.style.overflow = '';
+        releaseDialogFocus(galleryLightbox);
     }
 }
 

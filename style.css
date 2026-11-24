@@ -186,8 +186,9 @@ section[id]{
     justify-content: center;
     align-items: center;
 }
-.logo h2{
+.logo .logo-title{
     font-size: 45px;
+    font-weight: 700;
     color: var(--primary-color);
 }
 .logo span{
@@ -500,7 +501,7 @@ body.dark-mode .btn-outline:hover{
         padding: 12px 0;
         font-size: 20px;
     }
-    .logo h2{
+    .logo .logo-title{
         font-size: 32px;
     }
     .logo span{
@@ -889,9 +890,11 @@ body.dark-mode .footer-social-links a {
     aspect-ratio: 5/5;
 }
 
-.footer-logo h3 {
+.footer-logo .footer-logo-title {
     font-size: 24px;
+    font-weight: 700;
     color: var(--primary-color);
+    display: block;
 }
 
 .footer-logo span {
@@ -908,9 +911,9 @@ body.dark-mode .footer-social-links a {
     max-width: 320px;
 }
 
-.footer-links h4,
-.footer-contact h4,
-.footer-social h4 {
+.footer-links h3,
+.footer-contact h3,
+.footer-social h3 {
     font-size: 18px;
     font-weight: 700;
     color: var(--surface-color);
@@ -1345,7 +1348,7 @@ body.dark-mode .about-card:hover{
 }
 
 @media screen and (max-width: 480px){
-    .logo h2{
+    .logo .logo-title{
         font-size: 26px;
     }
     .logo span{
@@ -1870,7 +1873,7 @@ body.dark-mode .involved-list li{
     color: #fff;
     max-width: 600px;
 }
-.lightbox-caption h3{
+.lightbox-caption h2{
     font-size: 22px;
     font-weight: 700;
     margin-bottom: 6px;
@@ -1969,7 +1972,7 @@ body.dark-mode .gallery-activity-caption p{
         height: 42px;
         font-size: 24px;
     }
-    .lightbox-caption h3{
+    .lightbox-caption h2{
         font-size: 18px;
     }
     .lightbox-caption p{
@@ -3041,9 +3044,19 @@ body.dark-mode .amount-btn.selected{
 .payment-option{
     cursor: pointer;
     display: flex;
+    position: relative;
 }
 .payment-option input{
-    display: none;
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    pointer-events: none;
+}
+.payment-option input:focus-visible + .payment-option-box{
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
 }
 .payment-option-box{
     display: flex;
@@ -3291,7 +3304,7 @@ body.dark-mode .whatsapp-guidance-actions .btn-outline:hover{
         padding: 16px 10px;
         font-size: 19px;
     }
-    .logo h2{
+    .logo .logo-title{
         font-size: 36px;
     }
     .logo span{
@@ -3794,7 +3807,7 @@ body.dark-mode .faq-question i{
     justify-content: space-between;
     gap: 28px;
 }
-.footer-newsletter-text h4{
+.footer-newsletter-text h3{
     font-size: 20px;
     font-weight: 700;
     color: var(--button-text);
@@ -4029,4 +4042,52 @@ body.dark-mode .gallery-video-quote{
         width: 100%;
         justify-content: center;
     }
+}
+
+/* Accessibility: Skip link, form label, and global keyboard focus-visible styles */
+.skip-link{
+    position: fixed;
+    top: -100px;
+    left: 16px;
+    z-index: 2000;
+    background: var(--primary-color);
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    transition: top 0.2s ease;
+}
+.skip-link:focus{
+    top: 16px;
+    outline: 3px solid var(--accent-light);
+    outline-offset: 2px;
+}
+main:focus{
+    outline: none;
+}
+.form-group .form-label{
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--heading-color);
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+video:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible{
+    outline: 3px solid var(--accent-color);
+    outline-offset: 3px;
+}
+body.dark-mode a:focus-visible,
+body.dark-mode button:focus-visible,
+body.dark-mode input:focus-visible,
+body.dark-mode select:focus-visible,
+body.dark-mode textarea:focus-visible,
+body.dark-mode video:focus-visible,
+body.dark-mode [tabindex]:not([tabindex="-1"]):focus-visible{
+    outline-color: var(--accent-light);
 }
