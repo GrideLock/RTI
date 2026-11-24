@@ -27,11 +27,14 @@ navLinks.forEach(link => {
     });
 });
 
-/* Scroll reveal animation for about cards */
+/* Scroll reveal animation for cards */
 const aboutCards = document.querySelectorAll('.about-card');
 const coreValueCards = document.querySelectorAll('.core-value-card');
 const involvedCards = document.querySelectorAll('.involved-card');
 const impactCards = document.querySelectorAll('.impact-card');
+const transparencyCards = document.querySelectorAll('.transparency-card');
+const updateCards = document.querySelectorAll('.update-card');
+const faqItems = document.querySelectorAll('.faq-item');
 const observerOptions = {
     root: null,
     rootMargin: '0px',
@@ -49,6 +52,44 @@ aboutCards.forEach(card => aboutObserver.observe(card));
 coreValueCards.forEach(card => aboutObserver.observe(card));
 involvedCards.forEach(card => aboutObserver.observe(card));
 impactCards.forEach(card => aboutObserver.observe(card));
+transparencyCards.forEach(card => aboutObserver.observe(card));
+updateCards.forEach(card => aboutObserver.observe(card));
+faqItems.forEach(item => aboutObserver.observe(item));
+
+/* Active navbar link highlight on scroll */
+const trackedSections = document.querySelectorAll('section[id]');
+function updateActiveNavLink() {
+    const scrollPos = window.scrollY + 180;
+    let activeId = 'home';
+
+    trackedSections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (scrollPos >= top && scrollPos < top + height) {
+            activeId = section.getAttribute('id');
+        }
+    });
+
+    navLinks.forEach(link => {
+        const targetId = link.getAttribute('href')?.replace('#', '');
+        if (targetId === activeId) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+}
+let navScrollTicking = false;
+window.addEventListener('scroll', () => {
+    if (!navScrollTicking) {
+        window.requestAnimationFrame(() => {
+            updateActiveNavLink();
+            navScrollTicking = false;
+        });
+        navScrollTicking = true;
+    }
+}, { passive: true });
+updateActiveNavLink();
 
 /* Dark mode toggle */
 const themeToggle = document.getElementById('theme-toggle');
@@ -170,22 +211,32 @@ function openContactModal(type = 'general') {
         
         if (typeInput) typeInput.value = type;
         if (titleEl) {
-            titleEl.textContent = type === 'volunteer' ? 'Become a Volunteer' : type === 'partner' ? 'Partner With Us' : 'Get In Touch';
+            titleEl.textContent = type === 'volunteer'
+                ? 'Become a Volunteer'
+                : type === 'partner'
+                ? 'Partner With Us'
+                : type === 'report'
+                ? 'Request Impact Report'
+                : 'Get In Touch';
         }
         if (descEl) {
-            descEl.textContent = type === 'volunteer' 
-                ? 'Tell us about your skills and how you would like to contribute.' 
-                : type === 'partner' 
-                ? 'Tell us about your organization and how you would like to collaborate.' 
+            descEl.textContent = type === 'volunteer'
+                ? 'Tell us about your skills and how you would like to contribute.'
+                : type === 'partner'
+                ? 'Tell us about your organization and how you would like to collaborate.'
+                : type === 'report'
+                ? 'Share your contact details and our team will send you our latest community impact summary.'
                 : 'Fill out the form below and our team will respond within 24 hours.';
         }
         
         const messageInput = document.getElementById('contactMessage');
         if (messageInput) {
-            messageInput.placeholder = type === 'volunteer' 
-                ? 'I would like to volunteer because...' 
-                : type === 'partner' 
-                ? 'Our organization would like to partner because...' 
+            messageInput.placeholder = type === 'volunteer'
+                ? 'I would like to volunteer because...'
+                : type === 'partner'
+                ? 'Our organization would like to partner because...'
+                : type === 'report'
+                ? 'I would like to request the latest Rise Together Initiative impact report...'
                 : 'Tell us how you would like to help or partner with us...';
         }
     }
@@ -473,15 +524,37 @@ if (sectionContactForm) {
     });
 }
 
-/* Make activity cards keyboard accessible */
-galleryActivityCards.forEach((card, index) => {
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('role', 'button');
-    card.setAttribute('aria-label', 'View ' + (card.querySelector('.gallery-activity-caption h4')?.textContent || 'image'));
-    card.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            openGalleryLightbox(5 + index);
+/* Gallery Category Filters */
+const galleryFilterBtns = document.querySelectorAll('.gallery-filter-btn');
+function applyGalleryFilter(category) {
+    galleryFilterBtns.forEach(btn => {
+        const isActive = btn.dataset.filter === category;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+
+    galleryActivityCards.forEach(card => {
+        const cardCategory = card.dataset.category || 'all';
+        const shouldShow = category === 'all' || cardCategory === category;
+        card.classList.toggle('gallery-hidden', !shouldShow);
+        if (shouldShow) {
+            card.classList.add('visible');
+        }
+    });
+}
+
+galleryFilterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        applyGalleryFilter(btn.dataset.filter || 'all');
+    });
+});
+
+/* Jump links from Updates section to filtered Gallery */
+document.querySelectorAll('[data-gallery-jump]').forEach(link => {
+    link.addEventListener('click', () => {
+        const targetCategory = link.getAttribute('data-gallery-jump');
+        if (targetCategory) {
+            applyGalleryFilter(targetCategory);
         }
     });
 });
@@ -495,7 +568,7 @@ let currentGalleryIndex = 0;
 
 function getGalleryData() {
     const teamCards = document.querySelectorAll('.gallery-team-card');
-    const activityCards = document.querySelectorAll('.gallery-activity-card');
+    const activityCards = document.querySelectorAll('.gallery-activity-card:not(.gallery-hidden)');
     const data = [];
 
     teamCards.forEach(card => {
@@ -503,6 +576,7 @@ function getGalleryData() {
         const name = card.querySelector('.gallery-team-info h4');
         const role = card.querySelector('.gallery-team-info span');
         data.push({
+            element: card,
             src: img ? img.getAttribute('src') : '',
             alt: img ? img.getAttribute('alt') : '',
             title: name ? name.textContent : '',
@@ -515,6 +589,7 @@ function getGalleryData() {
         const h4 = card.querySelector('.gallery-activity-caption h4');
         const p = card.querySelector('.gallery-activity-caption p');
         data.push({
+            element: card,
             src: img ? img.getAttribute('src') : '',
             alt: img ? img.getAttribute('alt') : '',
             title: h4 ? h4.textContent : '',
@@ -524,6 +599,42 @@ function getGalleryData() {
 
     return data;
 }
+
+function openGalleryLightboxByCard(cardElement) {
+    const data = getGalleryData();
+    const index = data.findIndex(item => item.element === cardElement);
+    if (index !== -1) {
+        openGalleryLightbox(index);
+    }
+}
+
+/* Bind click & keyboard events dynamically so indices never go out of sync */
+galleryTeamCards.forEach(card => {
+    const viewBtn = card.querySelector('.gallery-view-btn');
+    if (viewBtn) {
+        viewBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openGalleryLightboxByCard(card);
+        });
+    }
+    const imageWrap = card.querySelector('.gallery-team-image');
+    if (imageWrap) {
+        imageWrap.addEventListener('click', () => openGalleryLightboxByCard(card));
+    }
+});
+
+galleryActivityCards.forEach(card => {
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('role', 'button');
+    card.setAttribute('aria-label', 'View ' + (card.querySelector('.gallery-activity-caption h4')?.textContent || 'image'));
+    card.addEventListener('click', () => openGalleryLightboxByCard(card));
+    card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openGalleryLightboxByCard(card);
+        }
+    });
+});
 
 function openGalleryLightbox(index) {
     const data = getGalleryData();
@@ -567,6 +678,78 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') navigateGallery(-1);
     if (e.key === 'ArrowRight') navigateGallery(1);
 });
+
+/* FAQ Accordion */
+const faqQuestions = document.querySelectorAll('.faq-question');
+faqQuestions.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const parentItem = btn.closest('.faq-item');
+        const isOpen = parentItem.classList.contains('open');
+
+        // Close other items for a clean accordion experience
+        document.querySelectorAll('.faq-item.open').forEach(openItem => {
+            if (openItem !== parentItem) {
+                openItem.classList.remove('open');
+                const openBtn = openItem.querySelector('.faq-question');
+                if (openBtn) openBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        parentItem.classList.toggle('open', !isOpen);
+        btn.setAttribute('aria-expanded', !isOpen ? 'true' : 'false');
+    });
+});
+
+/* Footer Newsletter Signup */
+const newsletterForm = document.getElementById('newsletterForm');
+const newsletterStatus = document.getElementById('newsletterStatus');
+if (newsletterForm) {
+    newsletterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const emailInput = document.getElementById('newsletterEmail');
+        const submitBtn = newsletterForm.querySelector('.newsletter-submit');
+        const submitText = submitBtn.querySelector('.submit-text');
+        const submitLoader = submitBtn.querySelector('.submit-loader');
+        const email = emailInput ? emailInput.value.trim() : '';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            newsletterStatus.textContent = 'Please enter a valid email address.';
+            newsletterStatus.className = 'form-status newsletter-status error';
+            return;
+        }
+
+        submitText.style.display = 'none';
+        submitLoader.style.display = 'inline-flex';
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('/api/newsletter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                newsletterStatus.textContent = data.message || 'Thank you for subscribing!';
+                newsletterStatus.className = 'form-status newsletter-status success';
+                newsletterForm.reset();
+            } else {
+                newsletterStatus.textContent = data.error || 'Subscription failed. Please try again.';
+                newsletterStatus.className = 'form-status newsletter-status error';
+            }
+        } catch (err) {
+            console.error('Newsletter error:', err);
+            newsletterStatus.textContent = 'Could not reach the server. Please try again or email risetogetherinitiative8@gmail.com.';
+            newsletterStatus.className = 'form-status newsletter-status error';
+        } finally {
+            submitText.style.display = 'inline-flex';
+            submitLoader.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    });
+}
 
 /* Payment success/cancel message handling */
 (function handlePaymentStatus() {

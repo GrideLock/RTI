@@ -20,7 +20,7 @@ const SMTP_PORT = process.env.SMTP_PORT || 587;
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS;
 const EMAIL_FROM = process.env.EMAIL_FROM || 'noreply@risetogether.org';
-const EMAIL_TO = process.env.EMAIL_TO || 'info@risetogether.org';
+const EMAIL_TO = process.env.EMAIL_TO || 'risetogetherinitiative8@gmail.com';
 
 app.use(cors());
 app.use(express.json());
@@ -158,6 +158,44 @@ app.post('/api/contact', async (req, res) => {
     } catch (err) {
         console.error('Contact form error:', err.message);
         res.status(500).json({ error: 'Failed to save submission. Please try again.' });
+    }
+});
+
+// Save newsletter subscription
+app.post('/api/newsletter', (req, res) => {
+    if (!checkRateLimit(req.ip + ':newsletter', 60000, 5)) {
+        return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    }
+
+    try {
+        const rawEmail = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!rawEmail || !emailRegex.test(rawEmail)) {
+            return res.status(400).json({ error: 'Please enter a valid email address.' });
+        }
+
+        const filePath = path.join(__dirname, 'newsletter.json');
+        let subscribers = [];
+        if (fs.existsSync(filePath)) {
+            subscribers = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        }
+
+        const alreadySubscribed = subscribers.some(sub => sub.email === rawEmail);
+        if (alreadySubscribed) {
+            return res.json({ success: true, message: 'You are already subscribed to RTI updates!' });
+        }
+
+        subscribers.push({
+            id: Date.now(),
+            email: rawEmail,
+            subscribedAt: new Date().toISOString()
+        });
+        fs.writeFileSync(filePath, JSON.stringify(subscribers, null, 2));
+
+        res.json({ success: true, message: 'Thank you for subscribing to Rise Together Initiative updates!' });
+    } catch (err) {
+        console.error('Newsletter signup error:', err.message);
+        res.status(500).json({ error: 'Could not save subscription. Please try again.' });
     }
 });
 
